@@ -71,9 +71,8 @@ This plugin https://github.com/klaxit/hidden-secrets-gradle-plugin/blob/master/R
 
 Request
 
-| URL | POST /open_weather_wrapper|
+| URL | POST|
  | --- | --- |
-| Description | OpenWeather wrapper |
 | Content-Type | application/json |
 | Parameters | oneSecSlot(currentTime):Used to prevent request replay attack  |
 | Parameters | cNonce: use for verify signature  |
@@ -83,9 +82,8 @@ Request
 
 Respond
 
-| URL | POST /open_weather_wrapper|
+| URL | POST |
   | --- | --- |
-| Description | OpenWeather wrapper |
 | Content-Type | application/json |
 | Parameters | data:encrypted respond data |
 | Parameters | code: respond code  |
