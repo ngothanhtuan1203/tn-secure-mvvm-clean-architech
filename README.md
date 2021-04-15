@@ -4,8 +4,8 @@ An Android app consuming a News API to display Hot News it has been built with c
 ## Table of Contents
 
 - [Architecture](#Architecture)
-- [Security Pattern](#Security Pattern)
-- [How the encryption and signing work](#How the encryption and signing work)
+- [Security Pattern](#SecurityPattern)
+- [How the encryption and signing work](#WorkFlow)
 
 # Architecture
 The Application is split into a three layer architecture:
@@ -57,7 +57,7 @@ logic and serves up data to and from the presentation layer through domain objec
 With this separation we can easily swap in new or replace the database being used without causeing
 major ripples across the codebase.
 
-# Security Pattern
+# SecurityPattern
 This application also demo some part of security when Retrofit communicate with backend
 - SSL Pinning: to avoid Middle man tool like: Fiddler, Proxy Man 
 - Encryption and signing:
@@ -66,7 +66,7 @@ The mainly principle of this is combination of RSA and AES algorithm.
   CLient has the keypair: PrivateKey  + PublicKey(share to backend side)
   
 Using these key set can archive the secure transaction data, for more detail please check below session.
-# How the encryption and signing work
+# WorkFlow
  As above session i mentioned to use keypair,but the problem is saving PrivateKey in mobile storage is a very bad practices.
 #### Protect private key in local application
 In the real world, saving plain Private in mobile storage is a bad practice. 
