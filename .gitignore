@@ -1,6 +1,11 @@
 .gradle
 /build/
-
+.idea
+/app/build/
+/logs/build/
+/domain/build/
+/data/build/
+/crypto/build/
 # Ignore Gradle GUI config
 gradle-app.setting
 
