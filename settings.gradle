@@ -1,0 +1,6 @@
+include ':crypto'
+include ':logs'
+include ':domain'
+include ':data'
+include ':app'
+rootProject.name = "tnsecuremvvm"
