@@ -1,6 +1,11 @@
 # tn-secure-mvvm-clean-architech
 
 An Android app consuming a News API to display Hot News it has been built with clean architecture principles, Repository Pattern and MVVM pattern as well as Architecture Components.
+## Table of Contents
+
+- [Architecture](#Architecture)
+- [Security Pattern](#Security Pattern)
+- [How the encryption and signing work](#How the encryption and signing work)
 
 # Architecture
 The Application is split into a three layer architecture:
