@@ -63,10 +63,14 @@ The mainly principle of this is combination of RSA and AES algorithm.
 Using these key set can archive the secure transaction data, for more detail please check below session.
 # How the encryption and signing work
  As above session i mentioned to use keypair,but the problem is saving PrivateKey in mobile storage is a very bad practices.
-#### Encrypted Private key
-So i decided to save encrypted PrivateKey and embedded it into res/raw folder.
-The idea here is use NDK and some SHIFT algorithm and save the SecretKey (This key use to decrypted the PrivateKey)
-This plugin https://github.com/klaxit/hidden-secrets-gradle-plugin/blob/master/README.md.
+#### Protect private key in local application
+In the real world, saving plain Private in mobile storage is a bad practice. 
+So i decided to save encrypted PrivateKey(AES algorithm) and embedded it into res/raw folder.
+But if how to protect encryption key? Yes i found this plugin 
+https://github.com/klaxit/hidden-secrets-gradle-plugin/blob/master/README.md.
+The idea here is use NDK and some SHIFT algorithm and save the SecretKey, and this plugin can help to archive the same with Dexguard,
+so that we can avoid reverse engineer.
+
 ### Flow to work
 
 Request
