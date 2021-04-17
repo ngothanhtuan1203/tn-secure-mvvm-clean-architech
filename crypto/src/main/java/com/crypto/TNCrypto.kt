@@ -1,9 +1,9 @@
 package com.crypto
 
-import android.util.Base64
 import com.crypto.di.TNCryptoInject
 import com.tnsecure.Secrets
 import com.tnsecure.logs.TNLog
+import org.apache.commons.codec.binary.Base64
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -29,13 +29,12 @@ class TNCrypto() {
     }
 
 
-    fun getAESEncryptedData(bodyDataPLain: String, encKey: ByteArray): String {
+    fun aesEncrypt(bodyDataPLain: String, encKey: ByteArray): String {
         return try {
 
             val aesFinalResult = aesHelper.encrypt(bodyDataPLain.toByteArray(), encKey)
-            Base64.encodeToString(
-                aesFinalResult,
-                Base64.NO_WRAP or Base64.URL_SAFE
+            Base64.encodeBase64URLSafeString(
+                aesFinalResult
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -43,11 +42,10 @@ class TNCrypto() {
         }
     }
 
-    fun getAESDecryptedData(base64EncryptedData: String, encKey: ByteArray): String {
+    fun aesDecrypt(base64EncryptedData: String, encKey: ByteArray): String {
         return try {
-            val encryptedByteRaw = Base64.decode(
-                base64EncryptedData,
-                Base64.NO_WRAP or Base64.URL_SAFE
+            val encryptedByteRaw = Base64.decodeBase64(
+                base64EncryptedData
             )
             val decrypted = aesHelper.decrypt(encryptedByteRaw, encKey)
             String(aesHelper.unpad(decrypted))
@@ -66,7 +64,7 @@ class TNCrypto() {
                 inputKeyPem.replace("-----BEGIN PUBLIC KEY-----\n", "")
             publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "")
             val decoded =
-                Base64.decode(publicKeyPEM, Base64.NO_WRAP)
+                Base64.decodeBase64(publicKeyPEM)
             return tnRSAHelper.getPublicKeyFromDecodedPem(decoded)
         } catch (e: InvalidKeySpecException) {
             e.printStackTrace()
@@ -112,9 +110,8 @@ class TNCrypto() {
     fun getPrivateKeyFromPem(inputPemFile: String): PrivateKey? {
         val privateKey: PrivateKey? = null
         try {
-            val decoded = Base64.decode(
-                inputPemFile,
-                Base64.NO_WRAP or Base64.NO_PADDING
+            val decoded = Base64.decodeBase64(
+                inputPemFile
             )
             val spec = PKCS8EncodedKeySpec(decoded)
             val kf = KeyFactory.getInstance(tnRSAHelper.PRKEY_RSA_ALGORITHM)

@@ -47,7 +47,7 @@ class WebApiRequestHandler {
                 return if (isVerified) {
 
                     val encryptedRespond = respondContainer.data
-                    val plainTextRespond = tnCrypto.getAESDecryptedData(
+                    val plainTextRespond = tnCrypto.aesDecrypt(
                         encryptedRespond,
                         sessionKey
                     )
@@ -94,7 +94,7 @@ class WebApiRequestHandler {
 
         val requestContainer = JsonUtil.toJsonString(baseRequest);
 
-        val requestData = tnCrypto.getAESEncryptedData(
+        val requestData = tnCrypto.aesEncrypt(
                 requestContainer,
                 sessionKey
         )

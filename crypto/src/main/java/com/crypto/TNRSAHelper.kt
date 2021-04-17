@@ -1,8 +1,7 @@
 package com.crypto
 
-import android.util.Base64
-import android.util.Base64.NO_WRAP
 import com.tnsecure.logs.TNLog
+import org.apache.commons.codec.binary.Base64
 import java.io.UnsupportedEncodingException
 import java.security.*
 import java.security.spec.InvalidKeySpecException
@@ -52,9 +51,9 @@ internal class TNRSAHelper {
             val cipher: Cipher = Cipher.getInstance(RSA_ENCRYPTED_ALGORITHM)
             cipher.init(Cipher.ENCRYPT_MODE, publicKey)
             val result = cipher.doFinal(datas)
-            return Base64.encodeToString(
-                result,
-                Base64.NO_WRAP or Base64.URL_SAFE
+
+            return Base64.encodeBase64URLSafeString(
+                result
             )
         } catch (e: NoSuchAlgorithmException) {
             e.printStackTrace()
@@ -97,7 +96,8 @@ internal class TNRSAHelper {
         signer.update(dataTobeSign.toByteArray())
 
         val signature = signer.sign()
-        return Base64.encodeToString(signature, NO_WRAP)
+        return Base64.encodeBase64String(signature)
+        //return Base64.encodeToString(signature, NO_WRAP)
     }
 
     /**

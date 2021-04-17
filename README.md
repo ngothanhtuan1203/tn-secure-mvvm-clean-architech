@@ -103,7 +103,7 @@ How it works:
 - Client<br>
   <t>+ `secretKey`: Get from Secret Native C<br>
   <t>+ `serverPublicKey`: Share by server<br>
-  <t>+ `clientPrivateKey`: This key store in bin.dat and totally encrypted with a secret key(I will explain more in the Face to face interview).
+  <t>+ `clientPrivateKey`: This key store in bin.dat and totally encrypted with a secret key.
 - Server<br>
   <t>+ `clientPublicKey`: Share by client<br>
   <t>+ `serverPrivateKey`: PrivateKey store in server storage
@@ -125,3 +125,16 @@ How it works:
   <t>+ Client receive respond <br>
   <t>+ Client verify signature by `serverPrivateKey` <br>
   <t> + Client process respond data<br>
+
+### More about clientPrivateKey
+
+The main idea of this thing is:  <br>
+Problem
+<br>  <br>
+Saving PrivateKey on a mobile device is a challenging thing.  <br>
+Samsung or Some company have their Hardware protocol to keep Privatekey but this exists on Specific models, not for all models.  <br>  <br>
+Pilot Idea:
+Instead of secure hardware, am trying to make a secure software protocol, in fact, if you are a Real Company, you could use some solution from 3rd company which has SLA for security level.  <br>  <br>
+But this is a study project( i am a very poor developer ;( ), so I choose a Native solution to keep the SecretKey. And use this secret key to encrypted the actual clientPrivateKey key (check the *.bin file in res/raw) and bingo your data is secured(but if you face with talent reverse engineer this way can be extracted).
+I found this Third party to archive the Keeping SecretKey in native lib.<br>
+https://github.com/klaxit/hidden-secrets-gradle-plugin/blob/master/README.md.
