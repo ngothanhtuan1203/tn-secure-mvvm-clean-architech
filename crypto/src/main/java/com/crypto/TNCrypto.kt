@@ -4,10 +4,10 @@ import com.crypto.di.TNCryptoInject
 import com.tnsecure.Secrets
 import com.tnsecure.logs.TNLog
 import org.apache.commons.codec.binary.Base64
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.io.InputStream
-import java.security.*
+import java.security.KeyFactory
+import java.security.NoSuchAlgorithmException
+import java.security.PrivateKey
+import java.security.PublicKey
 import java.security.spec.InvalidKeySpecException
 import java.security.spec.PKCS8EncodedKeySpec
 
@@ -15,7 +15,6 @@ class TNCrypto() {
     /**
      * Client private key, encrypted by Secret key(AES algorithm) and store to bin.dat file.
      */
-    val DATA = "res/raw/bin.dat"
     private var tnRSAHelper: TNRSAHelper = TNCryptoInject.provideRSAHelper()
     private var aesHelper: TNAESHelper = TNCryptoInject.provideAESHelper()
     private var tnSecureRandom: TNSecureRandom = TNCryptoInject.provideTNSecureRandom()
@@ -74,37 +73,32 @@ class TNCrypto() {
         return null
     }
 
-    fun getPrivateKey(): PrivateKey? {
-        val secretKey = Secrets().getEncKey("com.tnsecure")
-        TNLog.d("CryptoUtil:", "secret key:" + secretKey);
+    fun getPrivateKey(secretKey: String, encryptedFromFile: ByteArray): PrivateKey? {
         // read encrypted private key from device internal storage
-        val encryptedFromFile = readFileResource(javaClass, DATA)
+//        val encryptedFromFile = readFileResource(javaClass, dataPath)
+//        val encryptedFileInbase64 = Base64.encodeBase64URLSafeString(encryptedFromFile)
         // decrypted private key by secret key.
         val decryptedKey = aesHelper.decrypt(encryptedFromFile, secretKey.toByteArray())
         return getPrivateKeyFromPem(String(decryptedKey))
     }
 
-    @Throws(IOException::class)
-    private fun readFileResource(
-        resourceClass: Class<*>,
-        resourcePath: String
-    ): ByteArray {
-        val `is` =
-            resourceClass.classLoader?.getResourceAsStream(resourcePath)
-                ?: throw IOException("cannot find resource: $resourcePath")
-        return getBytesFromInputStream(`is`)
+    fun verifySignedData(
+        data: ByteArray?,
+        signedData: ByteArray?,
+        pubKey: PublicKey
+    ): Boolean {
+        return tnRSAHelper.verifySignedData(data, signedData, pubKey)
     }
 
-    @Throws(IOException::class)
-    private fun getBytesFromInputStream(`is`: InputStream): ByteArray {
-        val os = ByteArrayOutputStream()
-        val buffer = ByteArray(8192)
-        var len: Int
-        while (`is`.read(buffer).also { len = it } != -1) {
-            os.write(buffer, 0, len)
-        }
-        os.flush()
-        return os.toByteArray()
+    fun rsaSign(
+        privateKey: PrivateKey?,
+        dataTobeSign: String
+    ): String {
+        return tnRSAHelper.rsaSign(privateKey, dataTobeSign)
+    }
+
+    fun nextKey(length: Int): String {
+        return tnSecureRandom.nextKey(length)
     }
 
     fun getPrivateKeyFromPem(inputPemFile: String): PrivateKey? {
@@ -127,26 +121,12 @@ class TNCrypto() {
     }
 
     fun getSecretKey(): String {
-        return Secrets().getEncKey("com.tnsecure");
+        val secretKey: String = Secrets().getEncKey("com.tnsecure")
+        TNLog.d("CryptoUtil:", "secret key:" + secretKey)
+        return secretKey
     }
 
     fun randomBytes(length: Int): ByteArray {
         return tnSecureRandom.randomBytes(length)
-    }
-    fun verifySignedData(
-        data: ByteArray?,
-        signedData: ByteArray?,
-        pubKey: PublicKey
-    ): Boolean {
-        return tnRSAHelper.verifySignedData(data, signedData, pubKey)
-    }
-    fun rsaSign(
-        privateKey: PrivateKey?,
-        dataTobeSign: String
-    ): String {
-        return tnRSAHelper.rsaSign(privateKey, dataTobeSign)
-    }
-    fun nextKey(length: Int): String {
-        return tnSecureRandom.nextKey(length)
     }
 }

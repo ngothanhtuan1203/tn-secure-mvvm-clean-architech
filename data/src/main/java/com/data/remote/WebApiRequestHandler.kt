@@ -12,7 +12,11 @@ import com.data.remote.entity.request.SecureRequest
 import com.data.remote.entity.respond.BaseRespond
 import com.data.util.JsonUtil
 import com.tnsecure.logs.TNLog
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.InputStream
 
+const val DATA = "res/raw/bin.dat"
 class WebApiRequestHandler {
     suspend inline fun <reified T> requestRestApiAsync(
         apiService: APIService,
@@ -82,7 +86,8 @@ class WebApiRequestHandler {
         /**
          * Key use internal app.
          */
-        val privateKey = tnCrypto.getPrivateKey()
+        val encryptedBytes = readFileResource(javaClass, DATA)
+        val privateKey = tnCrypto.getPrivateKey(tnCrypto.getSecretKey(), encryptedBytes)
         val publicKey = tnCrypto.getPublicKeyFromPem(serverCertificate)
 
         /**
@@ -142,5 +147,28 @@ class WebApiRequestHandler {
         }
 
         return result
+    }
+
+    @Throws(IOException::class)
+     inline fun readFileResource(
+        resourceClass: Class<*>,
+        resourcePath: String
+    ): ByteArray {
+        val `is` =
+            resourceClass.classLoader?.getResourceAsStream(resourcePath)
+                ?: throw IOException("cannot find resource: $resourcePath")
+        return getBytesFromInputStream(`is`)
+    }
+
+    @Throws(IOException::class)
+    inline fun getBytesFromInputStream(`is`: InputStream): ByteArray {
+        val os = ByteArrayOutputStream()
+        val buffer = ByteArray(8192)
+        var len: Int
+        while (`is`.read(buffer).also { len = it } != -1) {
+            os.write(buffer, 0, len)
+        }
+        os.flush()
+        return os.toByteArray()
     }
 }
