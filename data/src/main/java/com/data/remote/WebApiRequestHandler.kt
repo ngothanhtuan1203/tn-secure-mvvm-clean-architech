@@ -16,8 +16,8 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
 
-const val DATA = "res/raw/bin.dat"
 class WebApiRequestHandler {
+    val DATA = "res/raw/bin.dat"
     suspend inline fun <reified T> requestRestApiAsync(
         apiService: APIService,
         app: Application,
@@ -30,8 +30,14 @@ class WebApiRequestHandler {
        if (!isNetworkConnected(app)) {
            return BaseRespond(null, "Your device not connected to internet", false)
        }
+        /**
+         * Create a random AES key.
+         */
         val sessionKey = tnCrypto.randomBytes(32)
 
+        /**
+         * Make wrapper secure request
+         */
         val secureRequest = wrapSecureRequest(request, tnCrypto, sessionKey, serverCertificate)
         return try {
             val respondContainer =

@@ -17,6 +17,7 @@ android {
         versionName versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -33,13 +34,18 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+        unitTests.includeAndroidResources = true
+    }
 }
 
 dependencies {
     api  project(':logs')
     api  project(':crypto')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3'
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
@@ -69,4 +75,13 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
+
+    // for testing
+    testImplementation "junit:junit:4.12"
+    testImplementation "android.arch.core:core-testing:2.2.0"
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation "androidx.test:runner:1.2.0"
+    testImplementation "org.mockito:mockito-core:$mockito"
+    testImplementation 'androidx.test.ext:junit:1.1.2'
+    testImplementation 'org.robolectric:robolectric:4.4'
 }

@@ -2,6 +2,7 @@ package com.data.local.room
 
 import androidx.room.*
 import com.data.local.entity.NoteEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {

@@ -2,8 +2,9 @@ package com.domain.model.mapper
 
 import com.data.remote.entity.respond.news.ArticleDto
 import com.domain.model.Article
+import javax.inject.Inject
 
-class ArticleDtoMapper : DomainMapper<ArticleDto, Article> {
+class ArticleDtoMapper @Inject constructor() : DomainMapper<ArticleDto, Article> {
 
     override fun mapToDomainModel(model: ArticleDto): Article {
         return Article(author = model.author,

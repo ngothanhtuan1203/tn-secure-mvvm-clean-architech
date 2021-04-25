@@ -127,4 +127,5 @@ class DataModule {
     @Singleton
     @Provides
     fun provideLocalDataSource(localDataSource: LocalDataSourceImpl): LocalDataSource = localDataSource
+
 }

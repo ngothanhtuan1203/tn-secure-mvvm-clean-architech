@@ -46,4 +46,8 @@ dependencies {
      */
     implementation "com.google.dagger:hilt-android:$hitl_version"
     kapt "com.google.dagger:hilt-android-compiler:$hitl_version"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 }
